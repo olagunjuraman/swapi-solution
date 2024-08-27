@@ -1,0 +1,7 @@
+tmp
+.env
+dump.rdb
+.idea
+.DS_STORE
+*.log
+bin
