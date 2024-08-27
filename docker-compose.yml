@@ -1,0 +1,44 @@
+version: '3.1'
+
+services:
+  db:
+    container_name: composepostgres
+    image: postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_HOST=0.0.0.0
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=yourpassword
+      - POSTGRES_DB=busha
+    ports:
+      - "5432:5432"
+    volumes:
+      - data:/var/lib/postgresql/data
+      - ./db-init:/docker-entrypoint-initdb.d  # Mounting the SQL script
+  redis:
+    image: redis
+    command: redis-server
+    environment:
+      - REDIS_REPLICATION_MODE=master
+    ports:
+      - "6379:6379"
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["go", "run", "main.go"]
+    env_file: .env
+    volumes:
+      - .:/go/src/app
+    ports:
+      - "8100:8100"
+    environment:
+      PORT: 8080
+      REDIS_ADDRESS: redis:6379
+      POSTGRES_HOST: db
+      POSTGRES_PASSWORD: yourpassword
+    depends_on:
+      - db
+      - redis
+volumes:
+  data:

@@ -19,17 +19,12 @@ func main() {
 	}
 	port, exist := os.LookupEnv("PORT")
 	if !exist {
-		log.Fatal("PORT not set in .env")
-	}
-
-	host, exist := os.LookupEnv("HOST")
-	if !exist {
-		log.Fatal("HOST not set in .env")
+		port = "8080"
 	}
 
 	_, route := Setup()
 	srv := &http.Server{
-		Addr:         host + ":" + port,
+		Addr:         ":" + port,
 		WriteTimeout: time.Second * 60,
 		ReadTimeout:  time.Second * 15,
 		IdleTimeout:  time.Second * 60,
@@ -96,9 +91,9 @@ func Setup() (*handlers.Handler, *mux.Router) {
 	}
 
 	redisPassword, exist := os.LookupEnv("REDIS_PASSWORD")
-	if !exist {
-		log.Fatal("REDIS_PASSWORD not set in .env")
-	}
+	//if !exist {
+	//	log.Fatal("REDIS_PASSWORD not set in .env")
+	//}
 	//Initiate Redis
 	redisDB := redis.New(&redis.Config{
 		Addr:     redisAddress,
