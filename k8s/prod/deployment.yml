@@ -25,7 +25,7 @@ spec:
           mountPath: /app/.env
           subPath: .env
         ports:
-        - containerPort: 80
+        - containerPort: 8100
         resources:
           requests:
             memory: "64Mi"
