@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: swapi-solution-api-service
+  namespace: dev
+  labels:
+    app: swapi-solution-api
+    env: dev
+spec:
+  selector:
+    app: swapi-solution-api
+    env: dev
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8100
+  type: LoadBalancer

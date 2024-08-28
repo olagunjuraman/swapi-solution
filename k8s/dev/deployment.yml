@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swapi-solution-api
+  namespace: dev
+  labels:
+    app: swapi-solution-api
+    env: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: swapi-solution-api
+  template:
+    metadata:
+      labels:
+        app: swapi-solution-api
+        env: dev
+    spec:
+      containers:
+      - name: swapi-solution-api
+        image: olagunju/swapi-solution-api:dev-latest
+        volumeMounts:
+        - name: config
+          mountPath: /app/.env
+          subPath: .env
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      volumes:
+      - name: config
+        secret:
+          secretName: swapi-solution-api-dev-config
+          items:
+          - key: .env
+            path: .env
